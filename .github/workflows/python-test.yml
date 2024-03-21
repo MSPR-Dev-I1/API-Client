@@ -1,0 +1,36 @@
+name: Python CI tests
+
+on: [pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout project
+
+      - name: Run pytest
+        working-directory: ./app
+        run: |
+          python3 -m pytest
+
+      - name: Run coverage
+        working-directory: ./app
+        run: |
+          coverage run -m pytest && coverage report && coverage xml
+
+      - name: List files
+        run: |
+          ls
+
+      - name: List files in app
+        run: |
+          ls app
+
+      - name: Get Cover
+        uses: orgoro/coverage@v3
+        with:
+          coverageFile: app/coverage.xml
+          thresholdModified: 0.5
+          thresholdNew: 0.9
+          token: ${{ secrets.GITHUB_TOKEN }}
