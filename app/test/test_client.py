@@ -3,9 +3,11 @@ from app.main import app
 
 client = TestClient(app)
 
-"""Cas passant
-    """
+
 def test_get_client():
+    """
+        Cas passant
+    """
     get_client = {"Hello": "Client"}
     response = client.get("/client")
     assert response.status_code == 200
