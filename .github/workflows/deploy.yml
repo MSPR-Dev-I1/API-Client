@@ -27,4 +27,4 @@ jobs:
 
     - name: Deploy to Cloud Run
       run: |
-        gcloud run deploy api-client --image europe-west9-docker.pkg.dev/$GOOGLE_PROJECT/api-client/image-api-client:latest --region  europe-west9 --platform managed
+        gcloud run deploy api-client --image europe-west9-docker.pkg.dev/ancient-tractor-411414/api-client/image-api-client:latest --region  europe-west9 --platform managed
