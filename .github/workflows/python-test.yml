@@ -37,6 +37,10 @@ jobs:
           thresholdNew: 0.95
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Analysing the code with pylint
+      - name: Analysing the code quality with pylint
         run: |
           pylint app
+      
+      - name: Analysing the code security with Bandit
+        run: |
+          bandit -r .
