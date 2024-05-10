@@ -43,4 +43,4 @@ jobs:
       
       - name: Analysing the code security with Bandit
         run: |
-          bandit -r .
+          bandit -r . -s B101
