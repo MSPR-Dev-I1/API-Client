@@ -18,9 +18,6 @@ jobs:
         create_credentials_file: 'true'
         workload_identity_provider: 'projects/412761838122/locations/global/workloadIdentityPools/pool/providers/provider-pool"'
         service_account: 'python@warm-particle-425311-e7.iam.gserviceaccount.com'
-    - name: 'gcloud'
-      run: |-
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
 
     - name: code checkout
       uses: actions/checkout@v4
