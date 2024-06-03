@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from app.database import test_connection
 
 router = APIRouter()
 
@@ -6,7 +7,10 @@ router = APIRouter()
 @router.get("")
 async def get_client():
     """
-        This API returns a simple message.
+        This API tests the connection with the database and returns a simple message.
     """
-
-    return {"Hello": "Client"}
+    try:
+        test_connection()
+        return {"Hello": "Client"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
