@@ -13,4 +13,4 @@ async def get_client():
         test_connection()
         return {"Hello": "Client"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Connection failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
