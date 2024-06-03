@@ -12,6 +12,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: code checkout
+      uses: actions/checkout@v4
+
     - name: 'Authenticate to GCP'
       uses: 'google-github-actions/auth@v0.3.1'
       with:
@@ -19,13 +22,10 @@ jobs:
         workload_identity_provider: 'projects/412761838122/locations/global/workloadIdentityPools/pool/providers/provider-pool"'
         service_account: 'python@warm-particle-425311-e7.iam.gserviceaccount.com'
 
-    - name: code checkout
-      uses: actions/checkout@v4
-
     - name: build and push the docker image
       run: |
-        docker build -t europe-west9-docker.pkg.dev/$GOOGLE_PROJECT/api-client/image-api-client:latest .
-        docker push europe-west9-docker.pkg.dev/$GOOGLE_PROJECT/api-client/image-api-client:latest
+        docker build -t europe-west9-docker.pkg.dev/warm-particle-425311-e7/api-client/image-api-client:latest .
+        docker push europe-west9-docker.pkg.dev/warm-particle-425311-e7/api-client/image-api-client:latest
 
     - name: Deploy to Cloud Run
       run: |
