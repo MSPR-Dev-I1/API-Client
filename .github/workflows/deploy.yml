@@ -4,11 +4,21 @@ on:
   push:
     branches:
       - 'develop'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-
+    - name: 'Authenticate to GCP'
+      uses: 'google-github-actions/auth@v0.3.1'
+      with:
+      create_credentials_file: 'true'
+      workload_identity_provider: 'projects/412761838122/locations/global/workloadIdentityPools/pool/providers/provider-pool"'
+      service_account: 'python@warm-particle-425311-e7.iam.gserviceaccount.com'
+    - name: 'gcloud'
+      run: |
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        gcloud services list --project cloudquicklab
     - name: code checkout
       uses: actions/checkout@v4
 
