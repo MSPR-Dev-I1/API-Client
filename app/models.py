@@ -6,11 +6,13 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import String
 from sqlalchemy import ForeignKey
 
+# pylint: disable=too-few-public-methods
 class Base(DeclarativeBase):
     """
         Classe Model de base SqlAlchemy
     """
 
+# pylint: disable=too-few-public-methods
 class Client(Base):
     """
         Classe Model de la table client
@@ -28,6 +30,7 @@ class Client(Base):
     commandes: Mapped[List["CommandeClient"]] \
         = relationship(back_populates="client", cascade="all, delete-orphan")
 
+# pylint: disable=too-few-public-methods
 class CommandeClient(Base):
     """
         Classe Model de la table commande_client
