@@ -1,16 +1,18 @@
-from fastapi import APIRouter, HTTPException
-from app.database import test_connection
+from typing import List
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app import actions, schemas
 
 router = APIRouter()
 
-
-@router.get("")
-async def get_client():
+@router.get("", response_model=List[schemas.Client])
+async def get_client(database: Session = Depends(get_db)):
     """
-        This API tests the connection with the database and returns a simple message.
+        Retourne tous les clients
     """
     try:
-        test_connection()
-        return {"Hello": "Client"}
+        db_clients = actions.get_clients(database)
+        return db_clients
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
