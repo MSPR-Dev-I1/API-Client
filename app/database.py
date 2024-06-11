@@ -3,6 +3,7 @@ import sqlalchemy
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from app.models import Base as BaseModel
 
 load_dotenv()
 
@@ -30,10 +31,9 @@ def get_db():
     finally:
         db.close()
 
-def test_connection():
+def create_tables():
     """
         Test la connexion.
         Provoque une exception si l'api n'arrive pas à se connecter à la base de données
     """
-    conn = engine.connect()
-    conn.close()
+    BaseModel.metadata.create_all(engine)

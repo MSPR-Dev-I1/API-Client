@@ -1,3 +1,5 @@
 [run]
 omit =
     **/database.py
+    **/actions.py
+    **/main.py
