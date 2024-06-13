@@ -7,14 +7,30 @@ from app.models import Base as BaseModel
 
 load_dotenv()
 
-database_host = os.getenv("DATABASE_HOST")
 database_username = os.getenv('DATABASE_USERNAME')
 database_password = os.getenv('DATABASE_PASSWORD')
+unix_socket_path  = os.getenv('INSTANCE_UNIX_SOCKET')
 
-database_url = f"mysql+pymysql://{database_username}:" \
-    f"{database_password}@{database_host}/paye-ton-kawa"
+## connexion pour le local
+# database_host = os.getenv("DATABASE_HOST")
+# database_url = f"mysql+pymysql://{database_username}:" \
+#     f"{database_password}@{database_host}/paye-ton-kawa"
+# engine = sqlalchemy.create_engine(database_url, echo=True)
 
-engine = sqlalchemy.create_engine(database_url, echo=True)
+## connexion pour le cloud run
+engine = sqlalchemy.create_engine(
+    sqlalchemy.engine.url.URL(
+        drivername="mysql+pymysql",
+        username=database_username,
+        password=database_password,
+        database="paye-ton-kawa",
+        host="",
+        port=None,
+        query={
+            "unix_socket": unix_socket_path
+        }
+    )
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
