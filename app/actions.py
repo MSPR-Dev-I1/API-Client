@@ -14,3 +14,12 @@ def get_client(id_client: int, database: Session):
     """
     client = database.query(models.Client).where(models.Client.id_client == id_client).first()
     return client
+
+def create_client(client: models.Client, database: Session):
+    """
+        Créer et retourne le client
+    """
+    database.add(client)
+    database.commit()
+    database.refresh(client)
+    return client

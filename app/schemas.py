@@ -4,7 +4,6 @@ class ClientBase(BaseModel):
     """
         Classe interface base Client
     """
-    id_client: int
     nom: str
     prenom: str
     email: str
@@ -15,4 +14,10 @@ class ClientBase(BaseModel):
 class Client(ClientBase):
     """
         Classe interface Client
+    """
+    id_client: int
+
+class ClientCreate(ClientBase):
+    """
+        Classe interface Client Create
     """
