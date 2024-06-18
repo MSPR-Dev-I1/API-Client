@@ -173,3 +173,55 @@ def test_post_client_error_500(mocker):
     response = client.post("/client", json=new_client)
 
     assert response.status_code == 500
+
+def test_delete_client(mocker):
+    """
+        Cas passant (retourne l'id du client supprimé)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    mocker.patch("app.actions.get_client", return_value=db_client)
+    mocker.patch("sqlalchemy.orm.Session.delete", return_value=None)
+    mocker.patch("sqlalchemy.orm.Session.commit", return_value=None)
+
+    response = client.delete("/client/" + str(db_client.id_client))
+
+    assert response.status_code == 200
+    assert response.json() == {"deleted": db_client.id_client}
+
+def test_delete_client_error_404(mocker):
+    """
+        Cas non passant (le client n'est pas trouvée)
+    """
+    mocker.patch("app.actions.get_client", return_value=None)
+
+    response = client.delete("/client/1")
+
+    assert response.status_code == 404
+
+def test_delete_client_error_500(mocker):
+    """
+        Cas non passant (erreur sur la connexion sur la base de données)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    mocker.patch("app.actions.get_client", return_value=db_client)
+    mocker.patch("sqlalchemy.orm.Session.delete", side_effect=Exception("Connection error"))
+
+    response = client.delete("/client/1")
+
+    assert response.status_code == 500
