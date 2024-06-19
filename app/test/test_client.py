@@ -225,3 +225,67 @@ def test_delete_client_error_500(mocker):
     response = client.delete("/client/1")
 
     assert response.status_code == 500
+
+def test_patch_client(mocker):
+    """
+        Cas passant (retourne le client mis à jour)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    client_updated = {
+        "nom": "test2",
+        "prenom": "test2"
+    }
+    mocker.patch("app.actions.get_client", return_value=db_client)
+    mocker.patch("sqlalchemy.orm.Session.commit", return_value=None)
+
+    response = client.patch("/client/" + str(db_client.id_client), json=client_updated)
+
+    assert response.status_code == 200
+    assert response.json()["nom"] == client_updated["nom"]
+    assert response.json()["prenom"] == client_updated["prenom"]
+
+def test_patch_client_error_404(mocker):
+    """
+         Cas non passant (le client n'est pas trouvé)
+    """
+    client_updated = {
+        "nom": "test2",
+        "prenom": "test2"
+    }
+    mocker.patch("app.actions.get_client", return_value=None)
+
+    response = client.patch("/client/1", json=client_updated)
+
+    assert response.status_code == 404
+
+def test_patch_client_error_500(mocker):
+    """
+        Cas non passant (erreur sur la connexion sur la base de données)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    client_updated = {
+        "nom": "test2",
+        "prenom": "test2"
+    }
+    mocker.patch("app.actions.get_client", return_value=db_client)
+    mocker.patch("sqlalchemy.orm.Session.commit", side_effect=Exception("Connection error"))
+
+    response = client.patch("/client/" + str(db_client.id_client), json=client_updated)
+
+    assert response.status_code == 500

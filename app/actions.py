@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app import models
+from app import models, schemas
 
 def get_clients(database: Session):
     """
@@ -30,3 +30,15 @@ def delete_client(client: models.Client, database: Session):
     """
     database.delete(client)
     database.commit()
+
+def update_client(db_client: models.Client, client: schemas.ClientUpdate, database: Session):
+    """
+        Met à jour les données du client
+    """
+    client_data = client.model_dump(exclude_unset=True)
+    for key, value in client_data.items():
+        setattr(db_client, key, value)
+
+    database.commit()
+
+    return db_client
