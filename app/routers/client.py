@@ -54,3 +54,21 @@ async def post_client(client: schemas.ClientCreate, database: Session = Depends(
         return db_client
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
+
+@router.delete("/{id_client}")
+async def delete_client(id_client: int, database: Session = Depends(get_db)):
+    """
+        Supprime un client
+    """
+    try:
+        db_client = actions.get_client(id_client, database)
+        if db_client is None:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+        actions.delete_client(db_client, database)
+
+        return {"deleted": id_client}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e

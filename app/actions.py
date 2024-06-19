@@ -23,3 +23,10 @@ def create_client(client: models.Client, database: Session):
     database.commit()
     database.refresh(client)
     return client
+
+def delete_client(client: models.Client, database: Session):
+    """
+        Supprime un client de la base de données
+    """
+    database.delete(client)
+    database.commit()
