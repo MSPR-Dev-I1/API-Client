@@ -26,18 +26,3 @@ class Client(Base):
     adresse: Mapped[str] = mapped_column(String(300))
     code_postal: Mapped[str] = mapped_column(String(10))
     ville: Mapped[str] = mapped_column(String(50))
-
-    commandes: Mapped[List["CommandeClient"]] \
-        = relationship(back_populates="client", cascade="all, delete-orphan")
-
-# pylint: disable=too-few-public-methods
-class CommandeClient(Base):
-    """
-        Classe Model de la table commande_client
-    """
-    __tablename__ = "commande_client"
-
-    id_commande: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
-    client_id: Mapped[int] = mapped_column(ForeignKey("client.id_client"))
-
-    client: Mapped["Client"] = relationship(back_populates="commandes")
