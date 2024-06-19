@@ -91,3 +91,44 @@ async def patch_client(id_client: int,
         raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
+
+@router.get("/{id_client}/informations_de_contact/", response_model=schemas.InformationsContact)
+async def informations_contact(id_client: int, database: Session = Depends(get_db)):
+    """
+        Retourne les informations de contact d'un client
+    """
+    try:
+        db_client = actions.get_client(id_client, database)
+        if db_client is None:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+        informations_de_contact = schemas.InformationsContact(
+            email=db_client.email,
+        )
+
+        return informations_de_contact
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
+
+@router.get("/{id_client}/nom_prenom_client/", response_model=schemas.NomPrenomClient)
+async def nom_prenom(id_client: int, database: Session = Depends(get_db)):
+    """
+        Retourne le nom et prénom du client
+    """
+    try:
+        db_client = actions.get_client(id_client, database)
+        if db_client is None:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+        nom_prenom_client = schemas.NomPrenomClient(
+            nom=db_client.nom,
+            prenom=db_client.prenom,
+        )
+
+        return nom_prenom_client
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e

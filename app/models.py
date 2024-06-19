@@ -1,10 +1,7 @@
-from typing import List
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
 from sqlalchemy import String
-from sqlalchemy import ForeignKey
 
 # pylint: disable=too-few-public-methods
 class Base(DeclarativeBase):
