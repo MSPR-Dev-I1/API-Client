@@ -72,3 +72,22 @@ async def delete_client(id_client: int, database: Session = Depends(get_db)):
         raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
+
+@router.patch("/{id_client}", response_model=schemas.Client)
+async def patch_client(id_client: int,
+    client: schemas.ClientUpdate, database: Session = Depends(get_db)):
+    """
+        Met à jour les donénes du client
+    """
+    try:
+        db_client = actions.get_client(id_client, database)
+        if db_client is None:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+        db_client = actions.update_client(db_client, client, database)
+
+        return db_client
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e

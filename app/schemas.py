@@ -1,3 +1,4 @@
+from typing import Union
 from pydantic import BaseModel
 
 class ClientBase(BaseModel):
@@ -21,3 +22,14 @@ class ClientCreate(ClientBase):
     """
         Classe interface Client Create
     """
+
+class ClientUpdate(BaseModel):
+    """
+        Classe interface Client Update
+    """
+    nom: Union[str, None] = None
+    prenom: Union[str, None] = None
+    email: Union[str, None] = None
+    adresse: Union[str, None] = None
+    code_postal: Union[str, None] = None
+    ville: Union[str, None] = None
