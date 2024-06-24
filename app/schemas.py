@@ -33,3 +33,16 @@ class ClientUpdate(BaseModel):
     adresse: Union[str, None] = None
     code_postal: Union[str, None] = None
     ville: Union[str, None] = None
+
+class InformationsContact(BaseModel):
+    """
+        Class inferface Information de contact    
+    """
+    email: str
+
+class NomPrenomClient(BaseModel):
+    """
+        Class inferface Nom et Prénom du client
+    """
+    nom: str
+    prenom: str

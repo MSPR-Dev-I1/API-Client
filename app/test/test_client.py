@@ -289,3 +289,87 @@ def test_patch_client_error_500(mocker):
     response = client.patch("/client/" + str(db_client.id_client), json=client_updated)
 
     assert response.status_code == 500
+
+def test_get_informations_de_contact(mocker):
+    """
+        Cas passant (retourne l'email du client)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    mocker.patch("app.actions.get_client", return_value=db_client)
+
+    response = client.get("/client/" + str(db_client.id_client) + "/informations_de_contact")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()['email'] == db_client.email
+
+def test_get_informations_de_contact_error_404(mocker):
+    """
+        Cas non passant (ne trouve pas le client)
+    """
+    mocker.patch("app.actions.get_client", return_value=None)
+
+    response = client.get("/client/1/informations_de_contact")
+
+    assert response.status_code == 404
+
+def test_get_informations_de_contact_error_500(mocker):
+    """
+        Cas non passant (erreur sur la connexion sur la base de données)
+    """
+    mocker.patch("app.actions.get_client", side_effect=Exception("Connection error"))
+
+    response = client.get("/client/1/informations_de_contact")
+
+    assert response.status_code == 500
+
+def test_get_nom_prenom_client(mocker):
+    """
+        Cas passant (retourne l'email du client)
+    """
+    db_client = models.Client(
+        id_client=1,
+        nom="test",
+        prenom="test",
+        email="test.test@ecoles-epsi.net",
+        adresse="9 rue de la Monnaie",
+        code_postal="59000",
+        ville="Lille"
+    )
+    mocker.patch("app.actions.get_client", return_value=db_client)
+
+    response = client.get("/client/" + str(db_client.id_client) + "/nom_prenom_client")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert response.json()['prenom'] == db_client.prenom
+    assert response.json()['nom'] == db_client.nom
+
+
+def test_get_nom_prenom_client_error_404(mocker):
+    """
+        Cas non passant (ne trouve pas le client)
+    """
+    mocker.patch("app.actions.get_client", return_value=None)
+
+    response = client.get("/client/1/nom_prenom_client")
+
+    assert response.status_code == 404
+
+def test_get_nom_prenom_client_error_500(mocker):
+    """
+        Cas non passant (erreur sur la connexion sur la base de données)
+    """
+    mocker.patch("app.actions.get_client", side_effect=Exception("Connection error"))
+
+    response = client.get("/client/1/nom_prenom_client")
+
+    assert response.status_code == 500

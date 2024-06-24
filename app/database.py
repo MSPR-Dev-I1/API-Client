@@ -18,7 +18,7 @@ def engine_dev():
         Connexion à la base de donnée dev
     """
     database_url = f"mysql+pymysql://{database_username}:" \
-        f"{database_password}@{database_host}/paye-ton-kawa"
+        f"{database_password}@{database_host}/paye-ton-kawa-Client"
     return sqlalchemy.create_engine(database_url, echo=True)
 
 def engine_cloud():
@@ -30,7 +30,7 @@ def engine_cloud():
                 drivername="mysql+pymysql",
                 username=database_username,
                 password=database_password,
-                database="paye-ton-kawa",
+                database="paye-ton-kawa-Client",
                 host="",
                 port=None,
                 query={

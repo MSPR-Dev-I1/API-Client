@@ -1,10 +1,7 @@
-from typing import List
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
 from sqlalchemy import String
-from sqlalchemy import ForeignKey
 
 # pylint: disable=too-few-public-methods
 class Base(DeclarativeBase):
@@ -26,18 +23,3 @@ class Client(Base):
     adresse: Mapped[str] = mapped_column(String(300))
     code_postal: Mapped[str] = mapped_column(String(10))
     ville: Mapped[str] = mapped_column(String(50))
-
-    commandes: Mapped[List["CommandeClient"]] \
-        = relationship(back_populates="client", cascade="all, delete-orphan")
-
-# pylint: disable=too-few-public-methods
-class CommandeClient(Base):
-    """
-        Classe Model de la table commande_client
-    """
-    __tablename__ = "commande_client"
-
-    id_commande: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
-    client_id: Mapped[int] = mapped_column(ForeignKey("client.id_client"))
-
-    client: Mapped["Client"] = relationship(back_populates="commandes")
