@@ -46,3 +46,9 @@ class NomPrenomClient(BaseModel):
     """
     nom: str
     prenom: str
+
+class TokenClient(BaseModel):
+    """
+        Class inferface token client
+    """
+    token: str

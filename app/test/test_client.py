@@ -1,9 +1,11 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import pytest
 from app.main import app
 from app import models, actions
 from app.models import Base
+
 
 client = TestClient(app)
 
@@ -373,3 +375,20 @@ def test_get_nom_prenom_client_error_500(mocker):
     response = client.get("/client/1/nom_prenom_client")
 
     assert response.status_code == 500
+
+@pytest.mark.parametrize("token", ["test_token"])
+def test_post_deconnexion(mocker, token):
+    """
+        Test de la route deconnexion
+    """
+    mock_publisher = mocker.MagicMock()
+    mock_publisher_topic = mocker.MagicMock()
+    mocker.patch("app.message.create_publisher", return_value=mock_publisher)
+    mocker.patch("google.cloud.pubsub_v1.PublisherClient.topic_path",
+        return_value=mock_publisher_topic)
+    mocker.patch("google.cloud.pubsub_v1.PublisherClient.publish", return_value=None)
+
+    response = client.post("/client/deconnexion", json={"token": token})
+
+    assert response.status_code == 200
+    assert response.json() == {"token": "revoked"}
