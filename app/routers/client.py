@@ -2,11 +2,12 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app import actions, schemas, models
+from app import actions, schemas, models, message
+
 
 router = APIRouter()
 
-@router.get("", response_model=List[schemas.Client])
+@router.get("", response_model=List[schemas.Client], tags=["client"])
 async def get_clients(database: Session = Depends(get_db)):
     """
         Retourne tous les clients
@@ -18,7 +19,7 @@ async def get_clients(database: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.get("/{id_client}", response_model=schemas.Client)
+@router.get("/{id_client}", response_model=schemas.Client, tags=["client"])
 async def get_client(id_client: int, database: Session = Depends(get_db)):
     """
         Retourne le client trouvé par son id
@@ -35,7 +36,7 @@ async def get_client(id_client: int, database: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.post("", response_model=schemas.Client, status_code=201)
+@router.post("", response_model=schemas.Client, status_code=201, tags=["client"])
 async def post_client(client: schemas.ClientCreate, database: Session = Depends(get_db)):
     """
         Créer un nouveau client
@@ -55,7 +56,7 @@ async def post_client(client: schemas.ClientCreate, database: Session = Depends(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.delete("/{id_client}")
+@router.delete("/{id_client}", tags=["client"])
 async def delete_client(id_client: int, database: Session = Depends(get_db)):
     """
         Supprime un client
@@ -73,7 +74,7 @@ async def delete_client(id_client: int, database: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.patch("/{id_client}", response_model=schemas.Client)
+@router.patch("/{id_client}", response_model=schemas.Client, tags=["client"])
 async def patch_client(id_client: int,
     client: schemas.ClientUpdate, database: Session = Depends(get_db)):
     """
@@ -92,7 +93,8 @@ async def patch_client(id_client: int,
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.get("/{id_client}/informations_de_contact/", response_model=schemas.InformationsContact)
+@router.get("/{id_client}/informations_de_contact/",
+    response_model=schemas.InformationsContact, tags=["client"])
 async def informations_contact(id_client: int, database: Session = Depends(get_db)):
     """
         Retourne les informations de contact d'un client
@@ -112,7 +114,8 @@ async def informations_contact(id_client: int, database: Session = Depends(get_d
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
 
-@router.get("/{id_client}/nom_prenom_client/", response_model=schemas.NomPrenomClient)
+@router.get("/{id_client}/nom_prenom_client/",
+    response_model=schemas.NomPrenomClient, tags=["client"])
 async def nom_prenom(id_client: int, database: Session = Depends(get_db)):
     """
         Retourne le nom et prénom du client
@@ -132,3 +135,11 @@ async def nom_prenom(id_client: int, database: Session = Depends(get_db)):
         raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection failed: {e}") from e
+
+@router.post('/deconnexion', tags=["client"])
+async def deconnexion(token: schemas.TokenClient):
+    """
+        Revoque le token de l'utilisateur
+    """
+    message.revoke_token_message(token)
+    return {"token": "revoked"}
