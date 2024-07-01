@@ -176,3 +176,8 @@ async def deconnexion(token: schemas.TokenClient):
     """
     message.revoke_token_message(token)
     return {"token": "revoked"}
+
+
+@router.get('/demo', tags=["client"])
+async def demo(_ = Depends(verify_authorization)):
+    return {"Demo": "MSPR"}
