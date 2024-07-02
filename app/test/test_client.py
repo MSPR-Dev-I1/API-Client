@@ -22,6 +22,18 @@ def memory_engine():
 
     return database
 
+
+def test_get_demo():
+    """
+    Test Demo
+    """
+    db_demo = {"Demo": "MSPR"}
+    response = client.get("/demo")
+
+    assert response.status_code == 200
+    assert response.json() == db_demo
+
+
 def test_get_clients(mocker):
     """
         Cas passant (retourne la liste de client)
